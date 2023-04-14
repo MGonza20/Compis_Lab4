@@ -53,23 +53,38 @@ class Lexer:
         check_comments = [lll.split(' ') for lll in lines_with_n]  
 
         joined = [' '.join(line) for line in check_comments]
-        for lj in joined:
-            if '(*' in lj and '*)' not in lj:
-                raise Exception("Error en comentario, linea "+ str(joined.index(lj)+1))
-            elif '(*' not in lj and '*)' in lj:
-                raise Exception("Error en comentario, linea "+ str(joined.index(lj)+1))
+        # Revision de errores en comentarios
+        for line_no, lj in enumerate(joined, start=1):
+            comments_stack = []
+            for i in range(len(lj) - 1):
 
-        for i in range(len(check_comments)):
-            if 'let' in check_comments[i] and len(check_comments[i]) > 4:
-                if check_comments[i][3][-1] == ']' or check_comments[i][3][-1] == ')': 
-                    if check_comments[i][4] == '(*' and check_comments[i][-1] == '*)':
-                        left_idx = check_comments[i].index('(*')
-                        right_idx = check_comments[i].index('*)')
-                        check_comments[i] = check_comments[i][:left_idx] + check_comments[i][right_idx + 1:]
+                current_next = lj[i:i+2]
+                if current_next == '(*':
+                    comments_stack.append(current_next)
+                elif current_next == '*)':
+                    if comments_stack and comments_stack[-1] == '(*':
+                        comments_stack.pop()
+                    else:
+                        raise Exception(f"Error en comentario, linea {line_no}")
+            if comments_stack:
+                raise Exception(f"Error en comentario, linea {line_no}")
+
+
+        for index, line in enumerate(joined):
+            line_wo_comment = ''
+            i = 0
+            while i < len(line):
+                if i < len(line) - 1 and line[i] == '(' and line[i + 1] == '*':
+                    while i < len(line) - 1 and (line[i] != '*' or line[i + 1] != ')'):
+                        i += 1
+                    i += 2
+                else:
+                    line_wo_comment += line[i]
+                    i += 1
+            joined[index] = line_wo_comment
             
-        lines_c = [' '.join(line) for line in check_comments]
-        return self.remove_spaces(lines_c)  
-        return lines
+
+        return self.remove_spaces(joined)
 
 
     def getTokens(self):
@@ -302,22 +317,30 @@ class Lexer:
     
 if __name__ == '__main__':
 
-    script_content = '''
-import sys
-import sara_compis1_tools.lexGen as tool
+#     script_content = '''
+# import sys
+# import sara_compis1_tools.lexGen as tool
 
-if len(sys.argv) < 2:
-    print("Por favor ingrese el archivo .yal")
-    sys.exit(1)
+# if len(sys.argv) < 2:
+#     print("Por favor ingrese el archivo .yal")
+#     sys.exit(1)
 
-yal_file = sys.argv[1]
-lex_var = tool.Lexer(yal_file)
-lex_var.read()
-mega_content = lex_var.generate_automatas()
-mega_automata = lex_var.unify(mega_content)
-lex_var.draw_mega_afd(mega_automata)
-    '''
+# yal_file = sys.argv[1]
+# lex_var = tool.Lexer(yal_file)
+# lex_var.read()
+# mega_content = lex_var.generate_automatas()
+# mega_automata = lex_var.unify(mega_content)
+# lex_var.draw_mega_afd(mega_automata)
+#     '''
 
-    with open('generated.py', 'w') as script_file:
-        script_file.write(script_content)
+#     with open('generated.py', 'w') as script_file:
+#         script_file.write(script_content)
+
+    yal_file = 'sara_compis1_tools/p1.yal'
+    lexer = Lexer(yal_file)
+    
+    lexer.read()
+    mega_content = lexer.generate_automatas()
+    mega_automata = lexer.unify(mega_content)
+    lexer.draw_mega_afd(mega_automata)
 
