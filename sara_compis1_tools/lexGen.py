@@ -84,11 +84,55 @@ class Lexer:
             joined[index] = line_wo_comment
             
 
-        return self.remove_spaces(joined)
+        return (self.remove_spaces(joined), joined)
+    
+
+    def assign_values(self):
+        splits = [line.split(' ') for line in self.getLines()[1]]
+        for line in splits:
+            if not all(element == '' for element in line):
+                while '' in line:
+                    for element in line:
+                        if element == '':
+                            line.pop(line.index(element))
+        
+        start = 0
+        for indx, line in enumerate(splits):
+            if line[0] == 'rule':
+                start = indx + 1
+        
+        if start:
+            rules = ''.join([''.join([word.replace('\t', '') for word in line]) for line in splits[start:]]).split('|')
+            rules_dict = {}
+            for rule in rules:
+                name = ''
+                value = ''
+                inside = False
+
+                for i in range(len(rule)):
+                    if rule[i] == '{':
+                        inside = True
+                        continue
+
+                    if rule[i] == '}':
+                        inside = False
+                        continue
+
+                    if not inside:
+                        name += rule[i]
+                    else:
+                        value += rule[i]
+
+                if name:
+                    rules_dict[name] = value
+
+
+        aasa = 123
+
 
 
     def getTokens(self):
-        lines = self.getLines()
+        lines = self.getLines()[0]
         for line_no, line in enumerate(lines, start=1):
             # generando tokens
             if line[:3] == 'let':
@@ -307,6 +351,7 @@ class Lexer:
     
 
     def read(self):
+        self.assign_values()
         self.getTokens()
         self.change_range_format()
         self.surround_dot()
