@@ -87,8 +87,29 @@ class Lexer:
         return (self.remove_spaces(joined), joined)
     
 
+    def special_split(self, text, delimiter):
+        result = []
+        start = 0
+        open_curly_b = 0
+
+        for index, char in enumerate(text):
+            if char == '{':
+                open_curly_b += 1
+            elif char == '}':
+                open_curly_b -= 1
+
+            elif char == delimiter and not open_curly_b:
+                result.append(text[start:index])
+                start = index + 1
+
+        result.append(text[start:])
+        return result
+    
+
+
     def assign_values(self):
-        splits = [line.split(' ') for line in self.getLines()[1]]
+        w = self.getLines()[1]
+        splits = [self.special_split(line, ' ') for line in self.getLines()[1]]
         for line in splits:
             if not all(element == '' for element in line):
                 while '' in line:
@@ -124,7 +145,8 @@ class Lexer:
                         value += rule[i]
 
                 if name:
-                    rules_dict[name] = value
+                    name = name[1:-1] if name[0] == "'" and name[-1] == "'" else name 
+                    rules_dict[name] = value.strip()
 
 
         aasa = 123
