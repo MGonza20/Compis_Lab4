@@ -1,6 +1,7 @@
 
 import sys
 import sara_compis1_tools.lexGen as tool
+# import sara_compis1_tools.StateAFD
 
 if len(sys.argv) < 2:
     print("Por favor ingrese el archivo .yal")

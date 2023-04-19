@@ -152,9 +152,6 @@ class Lexer:
                     rules_dict[name] = value.strip()
 
 
-
-
-
     def getTokens(self):
         lines = self.getLines()[0]
         for line_no, line in enumerate(lines, start=1):
@@ -315,6 +312,7 @@ class Lexer:
                 i += 1
         return output
 
+
     def draw_mega_afd(self, afd):
 
         G = nx.MultiDiGraph()
@@ -405,11 +403,25 @@ if __name__ == '__main__':
 #     with open('generated.py', 'w') as script_file:
 #         script_file.write(script_content)
 
-    yal_file = 'sara_compis1_tools/p1.yal'
+    yal_file = 'p1.yal'
     lexer = Lexer(yal_file)
     
     lexer.read()
     mega_content = lexer.generate_automatas()
     mega_automata = lexer.unify(mega_content)
-    lexer.draw_mega_afd(mega_automata)
+
+    with open('stateafd_objects.py', 'w') as file:
+        file.write("from StateAFD import StateAFD\n")
+        file.write("from lexGen import Lexer\n")
+        file.write("stateafd_data = [")
+        for i, obj in enumerate(mega_automata):
+            file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start})")
+            if i != len(mega_automata) - 1:
+                file.write(",") 
+        file.write("]\n")
+
+        file.write("lexerr = Lexer('p1.yal')\n")
+        file.write("lexerr.draw_mega_afd(stateafd_data)")
+        
+    # lexer.draw_mega_afd(mega_automata)
 
