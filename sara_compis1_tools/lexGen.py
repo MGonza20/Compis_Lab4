@@ -106,16 +106,19 @@ class Lexer:
         return result
     
 
-
-    def assign_values(self):
-        w = self.getLines()[1]
-        splits = [self.special_split(line, ' ') for line in self.getLines()[1]]
-        for line in splits:
+    def remove_spaces_list(self, lines):
+        for line in lines:
             if not all(element == '' for element in line):
                 while '' in line:
                     for element in line:
                         if element == '':
                             line.pop(line.index(element))
+        return lines
+    
+
+    def assign_values(self):
+        splits = [self.special_split(line, ' ') for line in self.getLines()[1]]
+        splits = self.remove_spaces_list(splits)
         
         start = 0
         for indx, line in enumerate(splits):
@@ -149,7 +152,6 @@ class Lexer:
                     rules_dict[name] = value.strip()
 
 
-        aasa = 123
 
 
 
