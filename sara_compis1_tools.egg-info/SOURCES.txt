@@ -3,9 +3,11 @@ LICENSE.txt
 MANIFEST.in
 README.txt
 setup.py
+stateafd_objects.py
 sara_compis1_tools/Format.py
 sara_compis1_tools/StateAFD.py
 sara_compis1_tools/Syntax.py
+sara_compis1_tools/Visualizer.py
 sara_compis1_tools/__init__.py
 sara_compis1_tools/directAFD.py
 sara_compis1_tools/generated.py

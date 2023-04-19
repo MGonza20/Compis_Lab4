@@ -2,8 +2,6 @@ from Format import Format
 from directAFD import AFD
 from StateAFD import StateAFD
 
-import networkx as nx
-from graphviz import Digraph
 import sys
 
 
@@ -312,35 +310,6 @@ class Lexer:
                 i += 1
         return output
 
-
-    def draw_mega_afd(self, afd):
-
-        G = nx.MultiDiGraph()
-        for state in afd:
-            node_attrs = {'shape': 'circle'}
-            if state.start:
-                node_attrs.update({'color': 'green', 'style': 'filled'})
-            if state.accepting:
-                node_attrs.update({'peripheries': '2'})
-            G.add_node(str(state.name), **node_attrs)
-
-            for transition, final_dest in state.transitions.items():
-                G.add_node(str(final_dest))
-                
-                if int(transition) not in [el for el in range(0, 35)]:
-                    transition = str(chr(int(transition)))
-
-                G.add_edge(str(state.name), str(final_dest), label=transition, dir='forward')    
-
-        dot = Digraph()
-        for u, v, data in G.edges(data=True):
-            dot.edge(u, v, label=data['label'], dir=data['dir'])
-        for node in G.nodes:
-            attrs = G.nodes[node]
-            dot.node(node, **attrs)
-
-        dot.render('mega/megaautomata', format='png')
-
     
     def generate_automatas(self):
         mega_content = []
@@ -384,44 +353,28 @@ class Lexer:
     
 if __name__ == '__main__':
 
-#     script_content = '''
-# import sys
-# import sara_compis1_tools.lexGen as tool
+    if len(sys.argv) < 2:
+        print("Por favor ingrese el archivo .yal")
+        sys.exit(1)
 
-# if len(sys.argv) < 2:
-#     print("Por favor ingrese el archivo .yal")
-#     sys.exit(1)
-
-# yal_file = sys.argv[1]
-# lex_var = tool.Lexer(yal_file)
-# lex_var.read()
-# mega_content = lex_var.generate_automatas()
-# mega_automata = lex_var.unify(mega_content)
-# lex_var.draw_mega_afd(mega_automata)
-#     '''
-
-#     with open('generated.py', 'w') as script_file:
-#         script_file.write(script_content)
-
-    yal_file = 'p1.yal'
+    yal_file = sys.argv[1]
     lexer = Lexer(yal_file)
     
     lexer.read()
     mega_content = lexer.generate_automatas()
     mega_automata = lexer.unify(mega_content)
 
-    with open('stateafd_objects.py', 'w') as file:
-        file.write("from StateAFD import StateAFD\n")
-        file.write("from lexGen import Lexer\n")
-        file.write("stateafd_data = [")
+    with open('generated.py', 'w') as file:
+        file.write("from sara_compis1_tools.StateAFD import StateAFD\n")
+        file.write("from sara_compis1_tools.Visualizer import Visualizer\n\n")
+        file.write("mega = [")
         for i, obj in enumerate(mega_automata):
             file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start})")
             if i != len(mega_automata) - 1:
                 file.write(",") 
-        file.write("]\n")
+        file.write("]\n\n")
 
-        file.write("lexerr = Lexer('p1.yal')\n")
-        file.write("lexerr.draw_mega_afd(stateafd_data)")
+        file.write("visual = Visualizer()\n")
+        file.write("visual.draw_mega_afd(mega)")
         
-    # lexer.draw_mega_afd(mega_automata)
 
