@@ -10,6 +10,7 @@ class Token:
             self.name = name
             self.regex = None
             self.line_no = None
+            self.value = None
     
         def __str__(self):
             return f"Token({self.name}, {self.regex})"
@@ -146,8 +147,8 @@ class Lexer:
                         value += rule[i]
 
                 if name:
-                    name = name[1:-1] if name[0] == "'" and name[-1] == "'" else name 
                     rules_dict[name] = value.strip()
+        return rules_dict
 
 
     def getTokens(self):
@@ -314,17 +315,37 @@ class Lexer:
     def generate_automatas(self):
         mega_content = []
         count = 0
+        return_values = self.assign_values()
+        done = []
         for token in self.tokens:
-            ff = Format(token.regex)
-            token.regex = ff.positiveId(token.regex + '#')
-            token.regex = ff.zeroOrOneId(token.regex)
-            token.regex = self.remove_double_parentheses(token.regex)
-            token.regex = ff.concat(token.regex)
-            
-            afdd = AFD(token)
-            new_afd = afdd.generateAFD(count)
-            mega_content.append(new_afd)
-            count += len(new_afd)
+            if token.name in return_values:
+                ff = Format(token.regex)
+                token.regex = ff.positiveId(token.regex + '#')
+                token.regex = ff.zeroOrOneId(token.regex)
+                token.regex = self.remove_double_parentheses(token.regex)
+                token.regex = ff.concat(token.regex)
+                token.value = return_values[token.name]
+                done.append(token.name)
+                
+                afdd = AFD(token)
+                new_afd = afdd.generateAFD(count)
+                mega_content.append(new_afd)
+                count += len(new_afd)
+
+        for value in return_values:
+            if len(value) == 3 and value[0] == "'" and value[2] == "'" and value not in done:
+                lenn = len(value)
+                token = Token(name=value[1:-1])
+                token.regex = value + '#'
+                token.value = return_values[value]
+                ff = Format(token.regex)
+                token.regex = ff.concat(token.regex)
+                done.append(token.name)
+                
+                afdd = AFD(token)
+                new_afd = afdd.generateAFD(count)
+                mega_content.append(new_afd)
+                count += len(new_afd)
         return mega_content
     
 
@@ -353,11 +374,12 @@ class Lexer:
     
 if __name__ == '__main__':
 
-    if len(sys.argv) < 2:
-        print("Por favor ingrese el archivo .yal")
-        sys.exit(1)
+    # if len(sys.argv) < 2:
+    #     print("Por favor ingrese el archivo .yal")
+    #     sys.exit(1)
 
-    yal_file = sys.argv[1]
+    # yal_file = sys.argv[1]
+    yal_file = "p1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()
@@ -369,7 +391,7 @@ if __name__ == '__main__':
         file.write("from sara_compis1_tools.Visualizer import Visualizer\n\n")
         file.write("mega = [")
         for i, obj in enumerate(mega_automata):
-            file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start})")
+            file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start}, value={obj.value})")
             if i != len(mega_automata) - 1:
                 file.write(",") 
         file.write("]\n\n")
