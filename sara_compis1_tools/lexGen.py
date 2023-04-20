@@ -329,6 +329,10 @@ class Lexer:
                 
                 afdd = AFD(token)
                 new_afd = afdd.generateAFD(count)
+                for elem in new_afd:
+                    if elem.accepting:
+                        elem.value = token.value
+
                 mega_content.append(new_afd)
                 count += len(new_afd)
 
@@ -344,6 +348,10 @@ class Lexer:
                 
                 afdd = AFD(token)
                 new_afd = afdd.generateAFD(count)
+                for elem in new_afd:
+                    if elem.accepting:
+                        elem.value = token.value
+
                 mega_content.append(new_afd)
                 count += len(new_afd)
         return mega_content
@@ -391,12 +399,13 @@ if __name__ == '__main__':
         file.write("from sara_compis1_tools.Visualizer import Visualizer\n\n")
         file.write("mega = [")
         for i, obj in enumerate(mega_automata):
-            file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start}, value={obj.value})")
+            value_str = repr(obj.value) if isinstance(obj.value, str) else str(obj.value)
+            file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start}, value={value_str})")
             if i != len(mega_automata) - 1:
-                file.write(",") 
+                file.write(",")
         file.write("]\n\n")
 
         file.write("visual = Visualizer()\n")
         file.write("visual.draw_mega_afd(mega)")
-        
+
 
