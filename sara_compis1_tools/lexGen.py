@@ -337,7 +337,7 @@ class Lexer:
                 count += len(new_afd)
 
         for value in return_values:
-            if len(value) == 3 and value[0] == "'" and value[2] == "'" and value not in done:
+            if value[0] == "'" and value[-1] == "'" and value not in done:
                 lenn = len(value)
                 token = Token(name=value[1:-1])
                 token.regex = value + '#'
