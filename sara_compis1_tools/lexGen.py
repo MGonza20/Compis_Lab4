@@ -2,8 +2,6 @@ from Format import Format
 from directAFD import AFD
 from StateAFD import StateAFD
 
-import networkx as nx
-from graphviz import Digraph
 import sys
 
 
@@ -12,6 +10,7 @@ class Token:
             self.name = name
             self.regex = None
             self.line_no = None
+            self.value = None
     
         def __str__(self):
             return f"Token({self.name}, {self.regex})"
@@ -148,11 +147,8 @@ class Lexer:
                         value += rule[i]
 
                 if name:
-                    name = name[1:-1] if name[0] == "'" and name[-1] == "'" else name 
                     rules_dict[name] = value.strip()
-
-
-
+        return rules_dict
 
 
     def getTokens(self):
@@ -315,49 +311,49 @@ class Lexer:
                 i += 1
         return output
 
-    def draw_mega_afd(self, afd):
-
-        G = nx.MultiDiGraph()
-        for state in afd:
-            node_attrs = {'shape': 'circle'}
-            if state.start:
-                node_attrs.update({'color': 'green', 'style': 'filled'})
-            if state.accepting:
-                node_attrs.update({'peripheries': '2'})
-            G.add_node(str(state.name), **node_attrs)
-
-            for transition, final_dest in state.transitions.items():
-                G.add_node(str(final_dest))
-                
-                if int(transition) not in [el for el in range(0, 35)]:
-                    transition = str(chr(int(transition)))
-
-                G.add_edge(str(state.name), str(final_dest), label=transition, dir='forward')    
-
-        dot = Digraph()
-        for u, v, data in G.edges(data=True):
-            dot.edge(u, v, label=data['label'], dir=data['dir'])
-        for node in G.nodes:
-            attrs = G.nodes[node]
-            dot.node(node, **attrs)
-
-        dot.render('mega/megaautomata', format='png')
-
     
     def generate_automatas(self):
         mega_content = []
         count = 0
+        return_values = self.assign_values()
+        done = []
         for token in self.tokens:
-            ff = Format(token.regex)
-            token.regex = ff.positiveId(token.regex + '#')
-            token.regex = ff.zeroOrOneId(token.regex)
-            token.regex = self.remove_double_parentheses(token.regex)
-            token.regex = ff.concat(token.regex)
-            
-            afdd = AFD(token)
-            new_afd = afdd.generateAFD(count)
-            mega_content.append(new_afd)
-            count += len(new_afd)
+            if token.name in return_values:
+                ff = Format(token.regex)
+                token.regex = ff.positiveId(token.regex + '#')
+                token.regex = ff.zeroOrOneId(token.regex)
+                token.regex = self.remove_double_parentheses(token.regex)
+                token.regex = ff.concat(token.regex)
+                token.value = return_values[token.name]
+                done.append(token.name)
+                
+                afdd = AFD(token)
+                new_afd = afdd.generateAFD(count)
+                for elem in new_afd:
+                    if elem.accepting:
+                        elem.value = token.value
+
+                mega_content.append(new_afd)
+                count += len(new_afd)
+
+        for value in return_values:
+            if value[0] == "'" and value[-1] == "'" and value not in done:
+                lenn = len(value)
+                token = Token(name=value[1:-1])
+                token.regex = value + '#'
+                token.value = return_values[value]
+                ff = Format(token.regex)
+                token.regex = ff.concat(token.regex)
+                done.append(token.name)
+                
+                afdd = AFD(token)
+                new_afd = afdd.generateAFD(count)
+                for elem in new_afd:
+                    if elem.accepting:
+                        elem.value = token.value
+
+                mega_content.append(new_afd)
+                count += len(new_afd)
         return mega_content
     
 
@@ -386,30 +382,30 @@ class Lexer:
     
 if __name__ == '__main__':
 
-#     script_content = '''
-# import sys
-# import sara_compis1_tools.lexGen as tool
+    # if len(sys.argv) < 2:
+    #     print("Por favor ingrese el archivo .yal")
+    #     sys.exit(1)
 
-# if len(sys.argv) < 2:
-#     print("Por favor ingrese el archivo .yal")
-#     sys.exit(1)
-
-# yal_file = sys.argv[1]
-# lex_var = tool.Lexer(yal_file)
-# lex_var.read()
-# mega_content = lex_var.generate_automatas()
-# mega_automata = lex_var.unify(mega_content)
-# lex_var.draw_mega_afd(mega_automata)
-#     '''
-
-#     with open('generated.py', 'w') as script_file:
-#         script_file.write(script_content)
-
-    yal_file = 'sara_compis1_tools/p1.yal'
+    # yal_file = sys.argv[1]
+    yal_file = "p1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()
     mega_content = lexer.generate_automatas()
     mega_automata = lexer.unify(mega_content)
-    lexer.draw_mega_afd(mega_automata)
+
+    with open('generated.py', 'w') as file:
+        file.write("from sara_compis1_tools.StateAFD import StateAFD\n")
+        file.write("from sara_compis1_tools.Visualizer import Visualizer\n\n")
+        file.write("mega = [")
+        for i, obj in enumerate(mega_automata):
+            value_str = repr(obj.value) if isinstance(obj.value, str) else str(obj.value)
+            file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start}, value={value_str})")
+            if i != len(mega_automata) - 1:
+                file.write(",")
+        file.write("]\n\n")
+
+        file.write("visual = Visualizer()\n")
+        file.write("visual.draw_mega_afd(mega)")
+
 
