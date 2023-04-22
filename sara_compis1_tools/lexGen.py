@@ -1,6 +1,7 @@
 from Format import Format
 from directAFD import AFD
 from StateAFD import StateAFD
+from AFN import AFN
 
 import sys
 
@@ -387,12 +388,15 @@ if __name__ == '__main__':
     #     sys.exit(1)
 
     # yal_file = sys.argv[1]
+    
     yal_file = "p1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()
     mega_content = lexer.generate_automatas()
     mega_automata = lexer.unify(mega_content)
+    afn_tool = AFN('')
+    mega_automata_afd = afn_tool.to_afd(mega_automata)
 
     with open('generated.py', 'w') as file:
         file.write("from sara_compis1_tools.StateAFD import StateAFD\n")
@@ -401,7 +405,7 @@ if __name__ == '__main__':
         for i, obj in enumerate(mega_automata):
             value_str = repr(obj.value) if isinstance(obj.value, str) else str(obj.value)
             file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start}, value={value_str})")
-            if i != len(mega_automata) - 1:
+            if i != len(mega_automata_afd) - 1:
                 file.write(",")
         file.write("]\n\n")
 
