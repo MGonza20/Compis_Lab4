@@ -378,6 +378,11 @@ class Lexer:
         self.replace_tokens()
     
 
+    def change_values(self, mega_automata):
+        for state in mega_automata:
+            updates = {str(chr(int(key))): state.transitions.pop(key) for key in list(state.transitions.keys())}
+            state.transitions.update(updates)
+
 
     
 if __name__ == '__main__':
@@ -393,8 +398,9 @@ if __name__ == '__main__':
     lexer.read()
     mega_content = lexer.generate_automatas()
     mega_automata = lexer.unify(mega_content)
+    lexer.change_values(mega_automata)
 
-    with open('generated.py', 'w') as file:
+    with open('generated.py', 'w', encoding="utf-8") as file:
         file.write("from sara_compis1_tools.StateAFD import StateAFD\n")
         file.write("from sara_compis1_tools.Visualizer import Visualizer\n\n")
         file.write("mega = [")
