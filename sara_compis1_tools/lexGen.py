@@ -366,7 +366,7 @@ class Lexer:
         for rt, rt_val in return_values.items():
             if rt not in [tk.name for tk in self.tokens]:
                 if rt[0] != "'" and rt[-1] != "'":
-                    errors.add(Error(line=rt_val.line_no, error="Error: Token no definido en rules: " + rt))
+                    errors.add(Error(line=rt_val.line_no, error="Error: Token no definido: " + rt))
 
         for value in return_values:
             if value[0] == "'" and value[-1] == "'" and value not in done:
@@ -386,7 +386,7 @@ class Lexer:
 
                 mega_content.append(new_afd)
                 count += len(new_afd)
-        return mega_content
+        return mega_content, errors
     
 
     def unify(self, mega_content):
@@ -424,11 +424,12 @@ if __name__ == '__main__':
     #     sys.exit(1)
 
     # yal_file = sys.argv[1]
-    yal_file = "sara_compis1_tools/p1.yal"
+    # yal_file = "sara_compis1_tools/p1.yal"
+    yal_file = "p1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()
-    mega_content = lexer.generate_automatas()
+    mega_content, errors = lexer.generate_automatas()
     mega_automata = lexer.unify(mega_content)
     lexer.change_values(mega_automata)
 
@@ -438,11 +439,22 @@ if __name__ == '__main__':
         file.write("import sys\n\n")
         file.write("mega = [")
         for i, obj in enumerate(mega_automata):
-            value_str = repr(obj.value) if isinstance(obj.value, str) else str(obj.value)
+            if obj.value:
+                value_str = repr(obj.value.line) if isinstance(obj.value.line, str) else str(obj.value.line)
+            else:
+                value_str = None
             file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start}, value={value_str})")
             if i != len(mega_automata) - 1:
                 file.write(",")
         file.write("]\n\n")
+
+        if errors:
+            file.write("errors = [")
+            for i, error in enumerate(errors):
+                file.write(f"Error(line={error.line}, error='{error.error}')")
+                if i != len(errors) - 1:
+                    file.write(",")
+            file.write("]\n\n")
 
         file.write("if len(sys.argv) < 2:\n\tprint('Por favor ingrese el archivo plano')\n\tsys.exit(1)\n")
         file.write("txt_file = sys.argv[1]\n\n")
