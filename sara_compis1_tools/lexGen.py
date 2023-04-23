@@ -57,12 +57,13 @@ class Lexer:
         return joined
 
 
-    def getLines(self):
+    def getLines(self, tokens_mode):
         f = open(self.filename, "r", encoding="utf-8")
         lines = f.readlines()
         f.close()
-
-        lines = [line.encode('utf-8').decode('unicode_escape') for line in lines]
+        
+        if tokens_mode:
+            lines = [line.encode('utf-8').decode('unicode_escape') for line in lines]
 
         lines_with_n = [n[:-1] for n in lines]
         check_comments = [lll.split(' ') for lll in lines_with_n]  
@@ -119,7 +120,7 @@ class Lexer:
     
 
     def assign_values(self):
-        splits = [self.special_split(line, ' ') for line in self.getLines()]
+        splits = [self.special_split(line, ' ') for line in self.getLines(tokens_mode=False)]
         splits = self.remove_spaces_list(splits)
         
         start = 0
@@ -155,7 +156,7 @@ class Lexer:
 
 
     def getTokens(self):
-        lines = self.remove_spaces(self.getLines())
+        lines = self.remove_spaces(self.getLines(tokens_mode=True))
         for line_no, line in enumerate(lines, start=1):
             # generando tokens
             if line[:3] == 'let':
