@@ -19,7 +19,11 @@ class Error:
     def __init__(self, line, error, position=None):
         self.line = line
         self.error = error
-        self.position = position
+
+class ruleLine:
+    def __init__(self, line_no, line):
+        self.line_no = line_no
+        self.line = line
 
 
 class Lexer:
@@ -135,37 +139,41 @@ class Lexer:
             if line[0] == 'rule':
                 start = indx + 1
             if start:
-                rules_lines.append((line, indx))
+                rules_lines.append(ruleLine(indx, line))
 
-        
         
         if len(rules_lines) > 1:
+
             rules_lines = rules_lines[1:]
-            rules = ''.join([''.join([word for word in line[0]]) for line in rules_lines]).split('|')
+            for rule in rules_lines:
+                if rule.line[0] == '|':
+                    rule.line.pop(0)
+                if len(rule.line) == 1:
+                    rule.line = rule.line[0]
 
             rules_dict = {}
-            for rule in rules:
+            for rule in rules_lines:
                 name = ''
                 value = ''
                 inside = False
 
-                for i in range(len(rule)):
-                    if rule[i] == '{':
+                for i in range(len(rule.line)):
+                    if rule.line[i] == '{':
                         inside = True
                         continue
 
-                    if rule[i] == '}':
+                    if rule.line[i] == '}':
                         inside = False
                         continue
 
                     if not inside:
-                        if rule[i] not in ['\t', ' ']:
-                            name += rule[i]
+                        if rule.line[i] not in ['\t', ' ']:
+                            name += rule.line[i]
                     else:
-                        value += rule[i]
+                        value += rule.line[i]
 
                 if name:
-                    rules_dict[name] = value.strip()
+                    rules_dict[name] = (value.strip(), rule.line_no)
         return rules_dict
 
 
