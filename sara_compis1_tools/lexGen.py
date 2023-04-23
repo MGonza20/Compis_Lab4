@@ -453,6 +453,8 @@ if __name__ == '__main__':
                 if i != len(errors) - 1:
                     file.write(",")
             file.write("])\n\n")
+        else:
+            file.write("errors = set()\n\n")
 
         file.write("if len(sys.argv) < 2:\n\tprint('Por favor ingrese el archivo plano')\n\tsys.exit(1)\n")
         file.write("txt_file = sys.argv[1]\n\n")

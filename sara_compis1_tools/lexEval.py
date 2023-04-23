@@ -49,15 +49,16 @@ class LexEval:
     def print_tokens(self, result_sim):
         tokens, errors = result_sim
         if not errors:
-            print('Tokens:')
+            print('')
             for token in tokens:
                 exec(token)
         else:
+            print('\n')
             for error in errors:
                 if error.position:
-                    print(f'Error en línea {error.line}: {error.error} en posición {error.position}')
+                    print(f'Error en línea {error.line}: \n{error.error}, posición {error.position}\n')
                 else:   
-                    print(f'Error en línea {error.line}: {error.error}')
+                    print(f'Error en línea {error.line}: \n{error.error}\n')
 
 
 if __name__ == '__main__':
