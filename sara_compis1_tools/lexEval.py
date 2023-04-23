@@ -14,32 +14,33 @@ class LexEval:
 
     def evaluate(self, mega):
         lines = self.lines
-        lines = [line[:-1] for line in lines]
+        lines = [line[:-1] for line in lines if line[-1] == '\n']
         afd_tools = AFD_tools()
         tokens = []
-        errors = []
+        errors = {}
 
-        for line_no, line in enumerate(lines):
+        for line_no, line in enumerate(lines, start=1):
             i = 0
             lenn = len(line)
             while i < lenn:
-                lexeme = ''
-                while i < lenn and line[i] not in [' ', '\t', '\n']:
-                    lexeme += line[i]
+                if line[i] not in [' ', '\t', '\n']:
+                    start = i
+                    while i < lenn and line[i] not in [' ', '\t', '\n']:
+                        i += 1
+                    lexeme = line[start:i]
+                else:
+                    lexeme = line[i]
                     i += 1
-                if i < lenn and not lexeme:
-                    lexeme += line[i]
 
                 accepted = afd_tools.afn_simulation(mega, lexeme)
                 if accepted:
-                    if accepted != 'empty_value':   
+                    if accepted != 'empty_value':
                         tokens.append(accepted)
                 else:
-                    errors.append((lexeme, line_no))
-                i += 1
-        
+                    if line_no not in errors: errors[line_no] = []
+                    errors[line_no].append(lexeme)
+
         return tokens, errors
-                    
 
 
 if __name__ == '__main__':
