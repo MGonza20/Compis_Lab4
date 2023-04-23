@@ -34,7 +34,7 @@ class Lexer:
         wo_spaces = []
         # Si hay comillas dobles reemplazar por simples
         for i in range(len(lines)):
-            lines[i] = lines[i].replace('"', "'")
+            lines[i] = lines[i].replace('"', "ω")
 
         for line in lines:
             new_line = []
@@ -213,7 +213,7 @@ class Lexer:
             new_regex = ''
             i = 0
 
-            if token.regex[0] == "'" and token.regex[-1] == "'":
+            if token.regex[0] == "'" and token.regex[-1] == "'" and token.regex.count("'") == 2:
                 unquoted_token = token.regex[1:-1]
                 token.regex = f'({unquoted_token})'
                 continue
@@ -272,7 +272,7 @@ class Lexer:
                 else:
                     check = ""
                     j = i
-                    while token.regex[j] not in ['+', '*', '?', '(', ')']:
+                    while token.regex[j] not in ['+', '*', '?', '(', ')', '[', ']']:
                         check += token.regex[j]
                         j += 1
                     keys = [tk.name for tk in tokens]
@@ -429,8 +429,8 @@ if __name__ == '__main__':
     #     sys.exit(1)
 
     # yal_file = sys.argv[1]
-    # yal_file = "p1.yal"
-    yal_file = "con1.yal"
+    yal_file = "con3.yal"
+    # yal_file = "sara_compis1_tools/con3.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()
