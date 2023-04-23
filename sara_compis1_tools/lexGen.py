@@ -173,7 +173,7 @@ class Lexer:
                         value += rule.line[i]
 
                 if name:
-                    rules_dict[name] = (value.strip(), rule.line_no)
+                    rules_dict[name] = (ruleLine(rule.line_no, value.strip()))
         return rules_dict
 
 
@@ -363,13 +363,10 @@ class Lexer:
                 mega_content.append(new_afd)
                 count += len(new_afd)
 
-        for rt in return_values:
+        for rt, rt_val in return_values.items():
             if rt not in [tk.name for tk in self.tokens]:
-                token_obj = [tk for tk in self.tokens if tk.name == rt]
-                token_obj = token_obj[0] if token_obj else None
-                if token_obj:
-                    errors.add(Error(line=token_obj.line_no, error="Error: Token no definido: " + rt))
-                # errors.add(Error(line=, error="Error: Token no definido: " + rt))
+                if rt[0] != "'" and rt[-1] != "'":
+                    errors.add(Error(line=rt_val.line_no, error="Error: Token no definido en rules: " + rt))
 
         for value in return_values:
             if value[0] == "'" and value[-1] == "'" and value not in done:
