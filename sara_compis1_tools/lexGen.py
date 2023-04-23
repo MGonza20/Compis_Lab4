@@ -266,7 +266,7 @@ class Lexer:
                 else:
                     check = ""
                     j = i
-                    while token.regex[j] not in ['+', '*', '?']:
+                    while token.regex[j] not in ['+', '*', '?', "'"]:
                         check += token.regex[j]
                         j += 1
                     keys = [tk.name for tk in tokens]
@@ -279,6 +279,8 @@ class Lexer:
 
             count_all = int((new_regex.count('(') + new_regex.count(')')) /2)
             if not count_all or new_regex[-1] in ['+', '*', '?']:
+                if  new_regex[0] == "'" and new_regex[-1] == "'":
+                    new_regex = new_regex[1:-1]
                 new_regex = f'({new_regex})'
 
             token.regex = new_regex
@@ -421,7 +423,7 @@ if __name__ == '__main__':
     #     sys.exit(1)
 
     # yal_file = sys.argv[1]
-    # yal_file = "sara_compis1_tools/p1.yal"
+    # yal_file = "p1.yal"
     yal_file = "p1.yal"
     lexer = Lexer(yal_file)
     
