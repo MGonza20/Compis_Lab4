@@ -19,8 +19,15 @@ class Visualizer:
             for transition, final_dest in state.transitions.items():
                 G.add_node(str(final_dest))
                 
-                if int(transition) not in [el for el in range(0, 35)]:
-                    transition = str(chr(int(transition)))
+                if ord(transition) in [el for el in range(0, 35)]:
+                    transition = str(ord(transition))
+
+                    if len(transition) == 1:
+                        transition = '00' + transition
+                    elif len(transition) == 2:
+                        transition = '0' + transition
+
+                
 
                 G.add_edge(str(state.name), str(final_dest), label=transition, dir='forward')    
 

@@ -39,6 +39,22 @@ class Lexer:
                     new_line.append(char)
             wo_spaces.append("".join(new_line))
         return wo_spaces
+    
+
+    def clean_comments(self, joined):
+        for index, line in enumerate(joined):
+            line_wo_comment = ''
+            i = 0
+            while i < len(line):
+                if i < len(line) - 1 and line[i] == '(' and line[i + 1] == '*':
+                    while i < len(line) - 1 and (line[i] != '*' or line[i + 1] != ')'):
+                        i += 1
+                    i += 2
+                else:
+                    line_wo_comment += line[i]
+                    i += 1
+            joined[index] = line_wo_comment
+        return joined
 
 
     def getLines(self):
@@ -68,22 +84,9 @@ class Lexer:
             if comments_stack:
                 raise Exception(f"Error en comentario, linea {line_no}")
 
-
-        for index, line in enumerate(joined):
-            line_wo_comment = ''
-            i = 0
-            while i < len(line):
-                if i < len(line) - 1 and line[i] == '(' and line[i + 1] == '*':
-                    while i < len(line) - 1 and (line[i] != '*' or line[i + 1] != ')'):
-                        i += 1
-                    i += 2
-                else:
-                    line_wo_comment += line[i]
-                    i += 1
-            joined[index] = line_wo_comment
+        joined = self.clean_comments(joined)
             
-
-        return (self.remove_spaces(joined), joined)
+        return joined
     
 
     def special_split(self, text, delimiter):
@@ -116,7 +119,7 @@ class Lexer:
     
 
     def assign_values(self):
-        splits = [self.special_split(line, ' ') for line in self.getLines()[1]]
+        splits = [self.special_split(line, ' ') for line in self.getLines()]
         splits = self.remove_spaces_list(splits)
         
         start = 0
@@ -152,7 +155,7 @@ class Lexer:
 
 
     def getTokens(self):
-        lines = self.getLines()[0]
+        lines = self.remove_spaces(self.getLines())
         for line_no, line in enumerate(lines, start=1):
             # generando tokens
             if line[:3] == 'let':

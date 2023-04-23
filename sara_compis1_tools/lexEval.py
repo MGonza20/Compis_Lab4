@@ -56,6 +56,7 @@ class LexEval:
                     errors.add(Error(line_no, f'Lexema no aceptado: {lexeme}', start))
 
         return tokens, errors
+    
 
 
 if __name__ == '__main__':
@@ -64,6 +65,4 @@ if __name__ == '__main__':
     results = lex_eval.evaluate(mega)
     aa = 123
 
-    # afd_tools = AFD_tools()
-    # print(afd_tools.afn_simulation(mega, '\t'))
 
