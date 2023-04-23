@@ -1,0 +1,16 @@
+  
+(* Archivo 1 *)
+
+let enteros = ['0'-'9'] 
+let decimales = enteros+.enteros+
+let hexadecimales = ['0'-'9''a'-'f''A'-'F']+
+let aritmeticos = ['+''-''*''/']
+
+
+rule tokens =
+	enteros	{} (* Ignorar espacios en blanco *)
+  | decimales		{ print("Identificador\n") }
+  | hexadecimales	{ print("Identificador\n") }
+  | aritmeticos		{ print("Identificador\n") }
+  | '^'				{ print("Identificador\n") }
+

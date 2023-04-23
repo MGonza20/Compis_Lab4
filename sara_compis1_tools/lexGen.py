@@ -424,7 +424,7 @@ if __name__ == '__main__':
 
     # yal_file = sys.argv[1]
     # yal_file = "p1.yal"
-    yal_file = "p1.yal"
+    yal_file = "con1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()
