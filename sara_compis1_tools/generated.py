@@ -6,4 +6,4 @@ mega = [StateAFD(name='init',transitions={'ε': 'A'},accepting=False,start=True,
 
 
 afd_tools = AFD_tools()
-print(afd_tools.afn_simulation(mega, '\t'))
+print(afd_tools.afn_simulation(mega, 'abcj'))

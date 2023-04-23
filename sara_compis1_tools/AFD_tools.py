@@ -6,7 +6,6 @@ class AFD_tools:
 
     get_state = lambda self, name, states: next(filter(lambda state: state.name == name, states), None)
 
-
     def epsilon_clousure(self, state, states):
         
         clousure = {state}
@@ -26,7 +25,6 @@ class AFD_tools:
                 for target in state.transitions[sym]:
                     next_state = self.get_state(target, states)
                     res.add(next_state)
-
         return res
 
 
@@ -49,6 +47,7 @@ class AFD_tools:
 
         for state in epsilon_states:
             if state.accepting:
-                return True
+                # exec("print('Identificador\\n')")
+                return state.value
 
-        return False
+        # return False
