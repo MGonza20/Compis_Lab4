@@ -3,9 +3,9 @@
 
 let delimitador = [' ''\t''\n']
 let espacioEnBlanco = delimitador+
-let digito = ['0'-'9'] (* prueba comentario *)
+let digito = ['0'-'3'] (* prueba comentario *)
 let digits = '-'?digito+
-let letra = ['a'-'z''A'-'Z']
+let letra = ['a'-'c''A'-'C']
 let identificador = letra(letra|digito)*
 
 rule tokens =
