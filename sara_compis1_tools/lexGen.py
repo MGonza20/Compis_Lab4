@@ -1,6 +1,8 @@
 from Format import Format
 from directAFD import AFD
 from StateAFD import StateAFD
+from Error import Error
+
 import sys
 
 
@@ -14,11 +16,6 @@ class Token:
         def __str__(self):
             return f"Token({self.name}, {self.regex})"
 
-
-class Error:
-    def __init__(self, line, error, position=None):
-        self.line = line
-        self.error = error
 
 class ruleLine:
     def __init__(self, line_no, line):
@@ -436,6 +433,7 @@ if __name__ == '__main__':
     with open('generated.py', 'w', encoding="utf-8") as file:
         file.write("from sara_compis1_tools.StateAFD import StateAFD\n")
         file.write("from lexEval import LexEval\n")
+        file.write("from Error import Error\n\n")
         file.write("import sys\n\n")
         file.write("mega = [")
         for i, obj in enumerate(mega_automata):
@@ -446,15 +444,15 @@ if __name__ == '__main__':
             file.write(f"StateAFD(name='{obj.name}',transitions={obj.transitions},accepting={obj.accepting},start={obj.start}, value={value_str})")
             if i != len(mega_automata) - 1:
                 file.write(",")
-        file.write("]\n\n")
+        file.write("]\n")
 
         if errors:
-            file.write("errors = [")
+            file.write("errors = set([")
             for i, error in enumerate(errors):
                 file.write(f"Error(line={error.line}, error='{error.error}')")
                 if i != len(errors) - 1:
                     file.write(",")
-            file.write("]\n\n")
+            file.write("])\n\n")
 
         file.write("if len(sys.argv) < 2:\n\tprint('Por favor ingrese el archivo plano')\n\tsys.exit(1)\n")
         file.write("txt_file = sys.argv[1]\n\n")

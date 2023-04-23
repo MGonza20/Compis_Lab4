@@ -1,12 +1,7 @@
 
 from AFD_tools import AFD_tools
 from StateAFD import StateAFD
-
-class Error:
-    def __init__(self, line, error, position=None):
-        self.line = line
-        self.error = error
-        self.position = position
+from Error import Error
 
 
 class LexEval:
@@ -59,7 +54,10 @@ class LexEval:
                 exec(token)
         else:
             for error in errors:
-                print(f'Error en línea {error.line}: {error.error} en posición {error.position}')
+                if error.position:
+                    print(f'Error en línea {error.line}: {error.error} en posición {error.position}')
+                else:   
+                    print(f'Error en línea {error.line}: {error.error}')
 
 
 if __name__ == '__main__':
