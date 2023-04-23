@@ -13,8 +13,7 @@ class LexEval:
         self.lexemes = []
 
     def evaluate(self, mega):
-        lines = self.lines
-        lines = [line[:-1] for line in lines if line[-1] == '\n']
+        lines = [line[:-1] for line in self.lines if line[-1] == '\n']
         afd_tools = AFD_tools()
         tokens = []
         errors = {}
