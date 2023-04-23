@@ -32,11 +32,10 @@ class LexEval:
 
                 accepted = afd_tools.afn_simulation(mega, lexeme)
                 if accepted:
-                    tokens.append(accepted)
+                    if accepted != 'empty_value':   
+                        tokens.append(accepted)
                 else:
-                    if i < lenn:
-                        if lexeme not in [' ', '\t', '\n']:
-                            errors.append((lexeme, line_no))
+                    errors.append((lexeme, line_no))
                 i += 1
         
         return tokens, errors

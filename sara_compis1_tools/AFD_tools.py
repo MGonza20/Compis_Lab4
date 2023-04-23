@@ -48,6 +48,6 @@ class AFD_tools:
         for state in epsilon_states:
             if state.accepting:
                 # exec("print('Identificador\\n')")
-                return state.value
+                return state.value if state.value else 'empty_value'
 
         # return False
