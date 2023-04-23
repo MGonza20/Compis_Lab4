@@ -406,7 +406,8 @@ if __name__ == '__main__':
 
     with open('generated.py', 'w', encoding="utf-8") as file:
         file.write("from sara_compis1_tools.StateAFD import StateAFD\n")
-        file.write("from sara_compis1_tools.Visualizer import Visualizer\n\n")
+        file.write("from lexEval import LexEval\n")
+        file.write("import sys\n\n")
         file.write("mega = [")
         for i, obj in enumerate(mega_automata):
             value_str = repr(obj.value) if isinstance(obj.value, str) else str(obj.value)
@@ -415,7 +416,10 @@ if __name__ == '__main__':
                 file.write(",")
         file.write("]\n\n")
 
-        file.write("visual = Visualizer()\n")
-        file.write("visual.draw_mega_afd(mega)")
+        file.write("if len(sys.argv) < 2:\n\tprint('Por favor ingrese el archivo plano')\n\tsys.exit(1)\n")
+        file.write("txt_file = sys.argv[1]\n\n")
+        file.write("lex = LexEval(txt_file)\n")
 
+        file.write("results = lex.evaluate(mega)\n")
+        file.write("lex.print_tokens(results)\n")
 
