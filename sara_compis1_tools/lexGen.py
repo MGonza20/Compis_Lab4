@@ -212,6 +212,12 @@ class Lexer:
         for token in tokens:
             new_regex = ''
             i = 0
+
+            if token.regex[0] == "'" and token.regex[-1] == "'":
+                unquoted_token = token.regex[1:-1]
+                token.regex = f'({unquoted_token})'
+                continue
+
             while i < len(token.regex):
 
                 p_left = token.regex.count("(")
@@ -266,7 +272,7 @@ class Lexer:
                 else:
                     check = ""
                     j = i
-                    while token.regex[j] not in ['+', '*', '?', "'"]:
+                    while token.regex[j] not in ['+', '*', '?', '(', ')']:
                         check += token.regex[j]
                         j += 1
                     keys = [tk.name for tk in tokens]
@@ -424,7 +430,7 @@ if __name__ == '__main__':
 
     # yal_file = sys.argv[1]
     # yal_file = "p1.yal"
-    yal_file = "con2.yal"
+    yal_file = "con1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()

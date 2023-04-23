@@ -1,0 +1,18 @@
+
+(* Archivo 2 *)
+
+let digito = ['0'-'9'] (* prueba comentario *)
+let letra = ['a'-'c''A'-'C']
+let final = 'xyz'
+let identificador = letra(letra|digito)*(final)
+
+
+
+
+rule tokens =
+	identificador	{} 
+    | palabra_reservada_if		{ print("Identificador\n") }
+    | palabra_reservada_for		{ print("Identificador\n") }
+    | palabra_reservada_while	{ print("Identificador\n") }
+    | enteros		{ print("Entero\n") }
+    | aritmeticos	{ print("Aritmetico\n") }
