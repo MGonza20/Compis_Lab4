@@ -66,9 +66,27 @@ class Lexer:
 
         lines_with_n = [n[:-1] for n in lines]
         check_comments = [lll.split(' ') for lll in lines_with_n]  
+
         joined = [' '.join(line) for line in check_comments]
-        
-        return self.clean_comments(joined)
+        # Revision de errores en comentarios
+        for line_no, lj in enumerate(joined, start=1):
+            comments_stack = []
+            for i in range(len(lj) - 1):
+
+                current_next = lj[i:i+2]
+                if current_next == '(*':
+                    comments_stack.append(current_next)
+                elif current_next == '*)':
+                    if comments_stack and comments_stack[-1] == '(*':
+                        comments_stack.pop()
+                    else:
+                        raise Exception(f"Error en comentario, linea {line_no}")
+            if comments_stack:
+                raise Exception(f"Error en comentario, linea {line_no}")
+
+        joined = self.clean_comments(joined)
+            
+        return joined
     
 
     def special_split(self, text, delimiter):
