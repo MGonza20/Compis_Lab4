@@ -47,7 +47,13 @@ class AFD_tools:
 
         for state in epsilon_states:
             if state.accepting:
-                # exec("print('Identificador\\n')")
                 return state.value if state.value else 'empty_value'
 
-        # return False
+
+    def get_symbols(self, afn):
+        symbols = set()
+        for state in afn:
+            for sym in state.transitions:
+                if sym != 'ε':
+                    symbols.add(sym)
+        return list(symbols)

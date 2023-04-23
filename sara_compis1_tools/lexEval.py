@@ -2,21 +2,34 @@
 from AFD_tools import AFD_tools
 from StateAFD import StateAFD
 
+class Error:
+    def __init__(self, line, error, position=None):
+        self.line = line
+        self.error = error
+        self.position = position
+
+    def __str__(self):
+        if self.position:
+            return f'Error en línea {self.line}: {self.error} en posición {self.position}'
+        else:
+            return f'Error en línea {self.line}: {self.error}'
+        
+
 class LexEval:
     def __init__(self, filename):
         self.filename = filename
-        self.file = open(self.filename, 'r')
+        self.file = open(self.filename, 'r', encoding='utf-8')
         self.lines = self.file.readlines()
         self.file.close()
 
-        self.tokens = []
-        self.lexemes = []
-
+ 
     def evaluate(self, mega):
         lines = [line[:-1] for line in self.lines if line[-1] == '\n']
         afd_tools = AFD_tools()
         tokens = []
-        errors = {}
+        errors = set()
+        afd_tools = AFD_tools()
+        symbols = afd_tools.get_symbols(mega)
 
         for line_no, line in enumerate(lines, start=1):
             i = 0
@@ -25,6 +38,10 @@ class LexEval:
                 if line[i] not in [' ', '\t', '\n']:
                     start = i
                     while i < lenn and line[i] not in [' ', '\t', '\n']:
+                        current = line[i]
+                        if current not in symbols:
+                            errors.add(Error(line_no, f'Caracter no reconocido: {current}', i))
+
                         i += 1
                     lexeme = line[start:i]
                 else:
@@ -36,8 +53,7 @@ class LexEval:
                     if accepted != 'empty_value':
                         tokens.append(accepted)
                 else:
-                    if line_no not in errors: errors[line_no] = []
-                    errors[line_no].append(lexeme)
+                    errors.add(Error(line_no, f'Lexema no aceptado: {lexeme}', start))
 
         return tokens, errors
 
