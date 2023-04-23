@@ -1,7 +1,6 @@
 from Format import Format
 from directAFD import AFD
 from StateAFD import StateAFD
-
 import sys
 
 
@@ -14,6 +13,13 @@ class Token:
     
         def __str__(self):
             return f"Token({self.name}, {self.regex})"
+
+
+class Error:
+    def __init__(self, line, error, position=None):
+        self.line = line
+        self.error = error
+        self.position = position
 
 
 class Lexer:
@@ -124,12 +130,19 @@ class Lexer:
         splits = self.remove_spaces_list(splits)
         
         start = 0
-        for indx, line in enumerate(splits):
+        rules_lines = []
+        for indx, line in enumerate(splits, start=1):
             if line[0] == 'rule':
                 start = indx + 1
+            if start:
+                rules_lines.append((line, indx))
+
         
-        if start:
-            rules = ''.join([''.join([word.replace('\t', '') for word in line]) for line in splits[start:]]).split('|')
+        
+        if len(rules_lines) > 1:
+            rules_lines = rules_lines[1:]
+            rules = ''.join([''.join([word for word in line[0]]) for line in rules_lines]).split('|')
+
             rules_dict = {}
             for rule in rules:
                 name = ''
@@ -146,7 +159,8 @@ class Lexer:
                         continue
 
                     if not inside:
-                        name += rule[i]
+                        if rule[i] not in ['\t', ' ']:
+                            name += rule[i]
                     else:
                         value += rule[i]
 
@@ -321,6 +335,7 @@ class Lexer:
         count = 0
         return_values = self.assign_values()
         done = []
+        errors = set()
         for token in self.tokens:
             if token.name in return_values:
                 ff = Format(token.regex)
@@ -339,6 +354,14 @@ class Lexer:
 
                 mega_content.append(new_afd)
                 count += len(new_afd)
+
+        for rt in return_values:
+            if rt not in [tk.name for tk in self.tokens]:
+                token_obj = [tk for tk in self.tokens if tk.name == rt]
+                token_obj = token_obj[0] if token_obj else None
+                if token_obj:
+                    errors.add(Error(line=token_obj.line_no, error="Error: Token no definido: " + rt))
+                # errors.add(Error(line=, error="Error: Token no definido: " + rt))
 
         for value in return_values:
             if value[0] == "'" and value[-1] == "'" and value not in done:
@@ -396,7 +419,7 @@ if __name__ == '__main__':
     #     sys.exit(1)
 
     # yal_file = sys.argv[1]
-    yal_file = "p1.yal"
+    yal_file = "sara_compis1_tools/p1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()
