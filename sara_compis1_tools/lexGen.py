@@ -458,6 +458,6 @@ if __name__ == '__main__':
         file.write("txt_file = sys.argv[1]\n\n")
         file.write("lex = LexEval(txt_file)\n")
 
-        file.write("results = lex.evaluate(mega)\n")
+        file.write("results = lex.evaluate(mega, errors)\n")
         file.write("lex.print_tokens(results)\n")
 

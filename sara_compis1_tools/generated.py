@@ -13,5 +13,5 @@ if len(sys.argv) < 2:
 txt_file = sys.argv[1]
 
 lex = LexEval(txt_file)
-results = lex.evaluate(mega)
+results = lex.evaluate(mega, errors)
 lex.print_tokens(results)

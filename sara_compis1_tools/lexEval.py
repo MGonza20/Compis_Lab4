@@ -12,11 +12,11 @@ class LexEval:
         self.file.close()
 
  
-    def evaluate(self, mega):
+    def evaluate(self, mega, prev_errors=None):
         lines = [line[:-1] for line in self.lines if line[-1] == '\n']
         afd_tools = AFD_tools()
         tokens = []
-        errors = set()
+        errors = prev_errors if prev_errors else set() 
         afd_tools = AFD_tools()
         symbols = afd_tools.get_symbols(mega)
 
