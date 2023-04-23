@@ -23,16 +23,20 @@ class LexEval:
             i = 0
             lenn = len(line)
             while i < lenn:
-                current_char = line[i]
                 lexeme = ''
                 while i < lenn and line[i] not in [' ', '\t', '\n']:
                     lexeme += line[i]
                     i += 1
+                if i < lenn and not lexeme:
+                    lexeme += line[i]
+
                 accepted = afd_tools.afn_simulation(mega, lexeme)
                 if accepted:
                     tokens.append(accepted)
                 else:
-                    errors.append((lexeme, line_no))
+                    if i < lenn:
+                        if lexeme not in [' ', '\t', '\n']:
+                            errors.append((lexeme, line_no))
                 i += 1
         
         return tokens, errors
