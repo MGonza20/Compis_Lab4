@@ -434,8 +434,8 @@ if __name__ == '__main__':
 
     with open('generated.py', 'w', encoding="utf-8") as file:
         file.write("from sara_compis1_tools.StateAFD import StateAFD\n")
-        file.write("from lexEval import LexEval\n")
-        file.write("from Error import Error\n")
+        file.write("from sara_compis1_tools.lexEval import LexEval\n")
+        file.write("from sara_compis1_tools.Error import Error\n")
         file.write("import sys\n\n")
         file.write("mega = [")
         for i, obj in enumerate(mega_automata):
