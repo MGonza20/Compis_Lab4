@@ -1,16 +1,16 @@
 
 (* Archivo 3 *)
 
-let digito = ['0'-'3'] (* prueba comentario *)
-let letra = ['a'-'c''A'-'C']
+let digito = ['0'-'9'] (* prueba comentario *)
+let letra = ['a'-'z''A'-'Z']
 let final = 'xyz'
 let identificador = letra(letra|digito)+(final)
 let enteros = digito+
-let decimales = ['0'-'3']+.['0'-'3']+
+let decimales = ['0'-'9']+.['0'-'9']+
 let palabra_reservada_if = 'if' 
 let palabra_reservada_for = 'for'
 let comilla_doble = '"'
-let cadena = (comilla_doble)(letra|digito)*(comilla_doble)
+let cadena = (comilla_doble)(letra|digito|' ')*(comilla_doble)
 
 
 
