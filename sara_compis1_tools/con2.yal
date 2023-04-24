@@ -2,7 +2,7 @@
 (* Archivo 2 *)
 
 let digito = ['0'-'9'] (* prueba comentario *)
-let letra = ['a'-'c''A'-'C']
+let letra = ['a'-'z''A'-'Z']
 let identificador = letra(letra|digito)*
 let palabra_reservada_if = 'if' 
 let palabra_reservada_for = 'for'
@@ -14,8 +14,8 @@ let aritmeticos = ['+''-''*''/']
 
 rule tokens =
 	identificador	{ print("Identificador\n") } 
-    | palabra_reservada_if		{ print("If\n") }
-    | palabra_reservada_for		{ print("For\n") }
-    | palabra_reservada_while	{ print("While\n") }
-    | enteros		{ print("Entero\n") }
+    | palabra_reservada_if		{ print("Palabra reservada: If\n") }
+    | palabra_reservada_for		{ print("Palabra reservada: For\n") }
+    | palabra_reservada_while	{ print("Palabra reservada: While\n") }
+    | enteros		{ print("Numero entero\n") }
     | aritmeticos	{ print("Operador aritmetico\n") }

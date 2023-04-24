@@ -3,16 +3,16 @@
 
 let digito = ['0'-'9']
 let enteros = digito+
-let decimales = enteros+.enteros+
+let decimales = enteros.(enteros)
 let beggining = '0x'
 let hexadecimales = beggining['0'-'9''a'-'f''A'-'F']+
 let aritmeticos = ['+''-''*''/']
 
 
 rule tokens =
-	enteros	{ print("Enteros\n") } (* Ignorar espacios en blanco *)
-  | decimales		{ print("Decimales\n") }
-  | hexadecimales	{ print("Hexadecimales\n") }
-  | aritmeticos		{ print("Operadores aritmeticos\n") }
+	enteros	{ print("Número enteros\n") } (* Ignorar espacios en blanco *)
+  | decimales		{ print("Número decimal\n") }
+  | hexadecimales	{ print("Número hexadecimales\n") }
+  | aritmeticos		{ print("Operador aritmetico\n") }
   | '^'				{ print("Operador de potenciacion\n") }
 
