@@ -15,6 +15,6 @@ lex = LexEval(txt_file)
 results = lex.evaluate(mega, errors)
 lex.print_tokens(results)
 
-from Visualizer import Visualizer
+from sara_compis1_tools.Visualizer import Visualizer
 v = Visualizer()
 v.draw_mega_afd(mega)
