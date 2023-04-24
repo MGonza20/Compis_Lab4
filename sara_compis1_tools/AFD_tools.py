@@ -1,4 +1,4 @@
-from StateAFD import StateAFD
+from sara_compis1_tools.StateAFD import StateAFD
 
 class AFD_tools:
     def __init__(self):
