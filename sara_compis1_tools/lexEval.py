@@ -1,7 +1,7 @@
 
-from AFD_tools import AFD_tools
-from StateAFD import StateAFD
-from Error import Error
+from sara_compis1_tools.AFD_tools import AFD_tools
+from sara_compis1_tools.StateAFD import StateAFD
+from sara_compis1_tools.Error import Error
 
 
 class LexEval:

@@ -24,3 +24,7 @@ Change Log
 0.0.9 (24/04/2023)
 ------------------
 - Show errors in order from LexEval.
+
+0.0.10 (24/04/2023)
+-------------------
+- Fixes.
