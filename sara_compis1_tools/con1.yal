@@ -10,9 +10,9 @@ let aritmeticos = ['+''-''*''/']
 
 
 rule tokens =
-	enteros	{ print("Número enteros\n") } (* Ignorar espacios en blanco *)
+	enteros	{ print("Número entero\n") } (* Ignorar espacios en blanco *)
   | decimales		{ print("Número decimal\n") }
-  | hexadecimales	{ print("Número hexadecimales\n") }
+  | hexadecimales	{ print("Número hexadecimal\n") }
   | aritmeticos		{ print("Operador aritmetico\n") }
   | '^'				{ print("Operador de potenciacion\n") }
 
