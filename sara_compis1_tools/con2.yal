@@ -7,15 +7,15 @@ let identificador = letra(letra|digito)*
 let palabra_reservada_if = 'if' 
 let palabra_reservada_for = 'for'
 let palabra_reservada_while = 'while'
-let enteros = ['0'-'9']
+let enteros = digito+
 let aritmeticos = ['+''-''*''/']
 
 
 
 rule tokens =
-	identificador	{} 
-    | palabra_reservada_if		{ print("Identificador\n") }
-    | palabra_reservada_for		{ print("Identificador\n") }
-    | palabra_reservada_while	{ print("Identificador\n") }
+	identificador	{ print("Identificador\n") } 
+    | palabra_reservada_if		{ print("If\n") }
+    | palabra_reservada_for		{ print("For\n") }
+    | palabra_reservada_while	{ print("While\n") }
     | enteros		{ print("Entero\n") }
-    | aritmeticos	{ print("Aritmetico\n") }
+    | aritmeticos	{ print("Operador aritmetico\n") }

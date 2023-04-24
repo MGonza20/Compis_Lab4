@@ -1,22 +1,21 @@
 
-(* Archivo 2 *)
+(* Archivo 3 *)
 
 let digito = ['0'-'9'] (* prueba comentario *)
-let letra = ['a'-'c''A'-'C']
+let letra = ['a'-'z''A'-'Z']
 let final = 'xyz'
 let identificador = letra(letra|digito)*(final)
-let enteros = ['0'-'9']
+let enteros = digito+
 let decimales = enteros+.enteros+
-let cadenaa = (letra|digito|' ')+
+let palabra_reservada_if = 'if' 
+let palabra_reservada_for = 'for'
 
 
 
 
 rule tokens =
-	identificador	{} 
-    | palabra_reservada_if		{ print("Identificador\n") }
-    | palabra_reservada_for		{ print("Identificador\n") }
-    | palabra_reservada_while	{ print("Identificador\n") }
-    | enteros		{ print("Entero\n") }
-    | decimales	{ print("Aritmetico\n") }
-    | cadenaa		{ print("Cadena\n") }
+	identificador	{ print("Identificador\n") } 
+    | palabra_reservada_if		{ print("Palabra reservada: If\n") }
+    | palabra_reservada_for		{ print("Palabra reservada: For\n") }
+    | enteros		{ print("Número entero\n") }
+    | decimales	{ print("Número decimal\n") }

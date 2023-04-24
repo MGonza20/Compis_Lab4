@@ -469,5 +469,9 @@ if __name__ == '__main__':
         file.write("lex = LexEval(txt_file)\n")
 
         file.write("results = lex.evaluate(mega, errors)\n")
-        file.write("lex.print_tokens(results)\n")
+        file.write("lex.print_tokens(results)\n\n")
+
+        file.write("from Visualizer import Visualizer\n")
+        file.write("v = Visualizer()\n")
+        file.write("v.draw_mega_afd(mega)\n")
 
