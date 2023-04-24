@@ -12,3 +12,7 @@ Change Log
 0.0.6 (19/04/2023)
 ------------------
 - More fields for the StateAFD class.
+
+0.0.7 (23/04/2023)
+------------------
+- Additions for AFN simulation.
