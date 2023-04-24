@@ -5,7 +5,7 @@ let digito = ['0'-'9']
 let enteros = digito+
 let decimales = enteros.(enteros)
 let beggining = '0x'
-let hexadecimales = beggining['0'-'9''A'-'F']+
+let hexadecimales = beggining['0'-'9''a'-'f''A'-'F']+
 let aritmeticos = ['+''-''*''/']
 
 
