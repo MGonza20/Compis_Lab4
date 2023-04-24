@@ -117,14 +117,14 @@ class Format:
                     elif len(val) == 1:
                         val = '00' + val
                     i += 2
-                elif val.isalnum() or val in ["#", '_', '^', 'ω']:
+                elif val.isalnum() or val in ["#", '_', '^', '"']:
                     val = str(ord(val))
                     if len(val) == 2:
                         val = '0' + val
                     elif len(val) == 1:
                         val = '00' + val
 
-            elif regexx[i].isalnum() or regexx[i] in ['#', '_', '^', 'ω']:
+            elif regexx[i].isalnum() or regexx[i] in ['#', '_', '^', '"']:
                 val = str(ord(val)) 
                 if len(val) == 2:
                     val = '0' + val

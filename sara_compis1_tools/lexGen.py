@@ -2,7 +2,6 @@ from Format import Format
 from directAFD import AFD
 from StateAFD import StateAFD
 from Error import Error
-
 import sys
 
 
@@ -33,8 +32,8 @@ class Lexer:
     def remove_spaces(self, lines):
         wo_spaces = []
         # Si hay comillas dobles reemplazar por simples
-        for i in range(len(lines)):
-            lines[i] = lines[i].replace('"', "ω")
+        # for i in range(len(lines)):
+        #     lines[i] = lines[i].replace('"', "ω")
 
         for line in lines:
             new_line = []
@@ -217,6 +216,7 @@ class Lexer:
                 unquoted_token = token.regex[1:-1]
                 token.regex = f'({unquoted_token})'
                 continue
+            
 
             while i < len(token.regex):
 
