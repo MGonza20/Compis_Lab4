@@ -367,7 +367,7 @@ class Lexer:
         for rt, rt_val in return_values.items():
             if rt not in [tk.name for tk in self.tokens]:
                 if rt[0] != "'" and rt[-1] != "'":
-                    errors.add(Error(line=rt_val.line_no, error="Error: Token no definido: " + rt))
+                    errors.add(Error(line=rt_val.line_no, error="Error: Token no definido: " + rt + " en archivo .yal"))
 
         for value in return_values:
             if value[0] == "'" and value[-1] == "'" and value not in done:
