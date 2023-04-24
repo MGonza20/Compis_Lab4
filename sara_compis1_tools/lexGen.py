@@ -31,10 +31,6 @@ class Lexer:
     
     def remove_spaces(self, lines):
         wo_spaces = []
-        # Si hay comillas dobles reemplazar por simples
-        # for i in range(len(lines)):
-        #     lines[i] = lines[i].replace('"', "ω")
-
         for line in lines:
             new_line = []
             between_q = False
