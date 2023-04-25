@@ -3,9 +3,9 @@
 
 let digito = ['0'-'9'] (* prueba comentario *)
 let letra = ['a'-'z''A'-'Z']
+let palabra_reservada_for = 'for'
 let palabra_reservada_while = 'while'
 let palabra_reservada_if = 'if' 
-let palabra_reservada_for = 'for'
 let identificador = letra(letra|digito)*
 let enteros = digito+
 let aritmeticos = ['+''-''*''/']
