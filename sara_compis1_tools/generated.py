@@ -1,5 +1,5 @@
 from sara_compis1_tools.StateAFD import StateAFD
-from lexEval import LexEval
+from sara_compis1_tools.lexEval import LexEval
 from sara_compis1_tools.Error import Error
 import sys
 
