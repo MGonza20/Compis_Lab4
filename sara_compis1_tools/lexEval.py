@@ -54,13 +54,22 @@ class LexEval:
                         tokens.append(accepted)
                 else:
                     if lexeme not in [' ', '\t', '\n']:
-                        errors.add(Error(line_no, f'Lexema no aceptado: {lexeme}', start))
+                        if len(lexeme) == 1:
+                            errors.add(Error(line_no, f'Caracter no reconocido: {lexeme}', start))
+                        elif len(lexeme) > 1:
+                            errors.add(Error(line_no, f'Cadena no aceptada: {lexeme}', start))
         return tokens, errors
     
 
     def sort_errors(self, errors):
         errors = list(errors)
         errors.sort(key=lambda x: x.line)
+        i = 0
+        while i < len(errors) - 1:
+            if errors[i].line == errors[i+1].line and errors[i].error == errors[i+1].error:
+                errors.pop(i)
+            else:
+                i += 1
         return errors
 
 
